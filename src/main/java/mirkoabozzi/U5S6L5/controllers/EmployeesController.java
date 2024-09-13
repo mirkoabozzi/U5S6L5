@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -68,7 +69,7 @@ public class EmployeesController {
 
     //POST IMG
     @PostMapping("/avatar/{id}")
-    public void imgUpload(@RequestParam("avatar") MultipartFile img, @PathVariable UUID id) throws IOException {
+    public void imgUpload(@RequestParam("avatar") MultipartFile img, @PathVariable UUID id) throws IOException, MaxUploadSizeExceededException {
         this.employeesService.imgUpload(img, id);
     }
 }

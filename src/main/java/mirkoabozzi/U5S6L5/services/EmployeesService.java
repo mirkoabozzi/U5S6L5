@@ -13,6 +13,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -61,7 +62,7 @@ public class EmployeesService {
     }
 
     //IMG UPLOAD
-    public void imgUpload(MultipartFile file, UUID id) throws IOException {
+    public void imgUpload(MultipartFile file, UUID id) throws IOException, MaxUploadSizeExceededException {
         Employee employee = this.findById(id);
         String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
         employee.setAvatar(url);
