@@ -5,6 +5,7 @@ import mirkoabozzi.U5S6L5.entities.Trip;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.services.TripsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -29,5 +30,13 @@ public class TripsController {
             return tripsService.save(payload);
         }
 
+    }
+
+    //GET
+    @GetMapping
+    private Page<Trip> getTrips(@RequestParam(defaultValue = "0") int page,
+                                @RequestParam(defaultValue = "10") int size,
+                                @RequestParam(defaultValue = "destination") String sortBy) {
+        return this.tripsService.findAll(page, size, sortBy);
     }
 }
