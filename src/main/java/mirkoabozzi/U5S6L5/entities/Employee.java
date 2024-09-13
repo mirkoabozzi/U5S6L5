@@ -5,14 +5,17 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AccessLevel;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.UUID;
 
 @Entity
 @Table(name = "employees")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Employee {
     @Id
     @GeneratedValue
@@ -23,4 +26,12 @@ public class Employee {
     private String surname;
     private String email;
     private String avatar;
+
+    public Employee(String username, String name, String surname, String email, String avatar) {
+        this.username = username;
+        this.name = name;
+        this.surname = surname;
+        this.email = email;
+        this.avatar = avatar;
+    }
 }

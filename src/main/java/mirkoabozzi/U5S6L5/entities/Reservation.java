@@ -2,15 +2,18 @@ package mirkoabozzi.U5S6L5.entities;
 
 import jakarta.persistence.*;
 import lombok.AccessLevel;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.UUID;
 
 @Entity
 @Table(name = "reservations")
-@Data
+@Getter
+@Setter
+@NoArgsConstructor
 public class Reservation {
     @Id
     @GeneratedValue
@@ -24,4 +27,11 @@ public class Reservation {
     @ManyToOne
     @JoinColumn(name = "trip_id")
     private Trip trip;
+
+    public Reservation(LocalDate date, String note, Employee employee, Trip trip) {
+        this.date = date;
+        this.note = note;
+        this.employee = employee;
+        this.trip = trip;
+    }
 }
