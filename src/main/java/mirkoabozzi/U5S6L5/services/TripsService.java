@@ -1,5 +1,6 @@
 package mirkoabozzi.U5S6L5.services;
 
+import mirkoabozzi.U5S6L5.dto.TripsChangeStateDTO;
 import mirkoabozzi.U5S6L5.dto.TripsDTO;
 import mirkoabozzi.U5S6L5.entities.Trip;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
@@ -44,6 +45,13 @@ public class TripsService {
         Trip found = this.findById(id);
         found.setDestination(payload.destination());
         found.setDate(payload.date());
+        found.setState(payload.state());
+        return this.tripsRepository.save(found);
+    }
+
+    //PUT UPDATE STATE
+    public Trip updateStateTrip(UUID id, TripsChangeStateDTO payload) {
+        Trip found = this.findById(id);
         found.setState(payload.state());
         return this.tripsRepository.save(found);
     }

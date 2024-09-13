@@ -1,5 +1,6 @@
 package mirkoabozzi.U5S6L5.controllers;
 
+import mirkoabozzi.U5S6L5.dto.TripsChangeStateDTO;
 import mirkoabozzi.U5S6L5.dto.TripsDTO;
 import mirkoabozzi.U5S6L5.entities.Trip;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
@@ -63,5 +64,16 @@ public class TripsController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         this.tripsService.delete(id);
+    }
+
+    //PUT STATE TRIP
+    @PutMapping("/state/{id}")
+    private Trip updateStateTrip(@PathVariable UUID id, @RequestBody @Validated TripsChangeStateDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return tripsService.updateStateTrip(id, payload);
+        }
     }
 }

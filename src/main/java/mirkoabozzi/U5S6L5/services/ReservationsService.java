@@ -29,6 +29,8 @@ public class ReservationsService {
     public Reservation save(ReservationsDTO payload) {
         Employee employeeFound = this.employeesService.findById(payload.employeeId());
         Trip tripFound = this.tripsService.findById(payload.tripId());
+//        if (reservationsRepository.existsByEmployeeAndDate(payload.employeeId(), payload.date()))
+//            throw new BadRequestException("Reservation already on db ");
         Reservation reservation = new Reservation(payload.date(), payload.note(), employeeFound, tripFound);
         return this.reservationsRepository.save(reservation);
     }
