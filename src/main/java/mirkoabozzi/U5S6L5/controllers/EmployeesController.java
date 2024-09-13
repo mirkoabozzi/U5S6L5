@@ -46,4 +46,21 @@ public class EmployeesController {
         return employeesService.findById(id);
     }
 
+    //PUT
+    @PutMapping("/{id}")
+    private Employee update(@PathVariable UUID id, @RequestBody @Validated EmployeesDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return employeesService.update(id, payload);
+        }
+    }
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        this.employeesService.delete(id);
+    }
 }

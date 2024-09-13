@@ -39,4 +39,18 @@ public class EmployeesService {
         return employeesRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
     }
 
+    //PUT
+    public Employee update(UUID id, EmployeesDTO payload) {
+        Employee found = this.findById(id);
+        found.setSurname(payload.username());
+        found.setName(payload.name());
+        found.setSurname(payload.surname());
+        found.setEmail(payload.email());
+        return this.employeesRepository.save(found);
+    }
+
+    //DELETE
+    public void delete(UUID id) {
+        this.employeesRepository.delete(this.findById(id));
+    }
 }
