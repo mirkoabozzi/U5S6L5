@@ -3,6 +3,7 @@ package mirkoabozzi.U5S6L5.services;
 import mirkoabozzi.U5S6L5.dto.TripsChangeStateDTO;
 import mirkoabozzi.U5S6L5.dto.TripsDTO;
 import mirkoabozzi.U5S6L5.entities.Trip;
+import mirkoabozzi.U5S6L5.enums.TripsState;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.exceptions.NotFoundException;
 import mirkoabozzi.U5S6L5.repositories.TripsRepository;
@@ -24,8 +25,12 @@ public class TripsService {
     public Trip save(TripsDTO payload) {
         if (tripsRepository.existsByDestinationAndDate(payload.destination(), payload.date()))
             throw new BadRequestException("This trip " + payload.destination() + " on this date " + payload.date() + " already exists on DB");
-        Trip trip = new Trip(payload.destination(), payload.date(), payload.state());
-        return this.tripsRepository.save(trip);
+        try {
+            Trip trip = new Trip(payload.destination(), payload.date(), TripsState.valueOf(payload.state().toUpperCase()));
+            return this.tripsRepository.save(trip);
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("Invalid state use SCHEDULED or COMPLETED");
+        }
     }
 
     //GET
@@ -45,14 +50,18 @@ public class TripsService {
         Trip found = this.findById(id);
         found.setDestination(payload.destination());
         found.setDate(payload.date());
-        found.setState(payload.state());
+        found.setState(TripsState.valueOf(payload.state().toUpperCase()));
         return this.tripsRepository.save(found);
     }
 
     //PUT UPDATE STATE
     public Trip updateStateTrip(UUID id, TripsChangeStateDTO payload) {
         Trip found = this.findById(id);
-        found.setState(payload.state());
+        try {
+            found.setState(TripsState.valueOf(payload.state()));
+        } catch (IllegalArgumentException ex) {
+            throw new BadRequestException("Invalid state use SCHEDULED or COMPLETED");
+        }
         return this.tripsRepository.save(found);
     }
 
