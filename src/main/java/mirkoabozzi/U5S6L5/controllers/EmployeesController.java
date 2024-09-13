@@ -10,7 +10,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -62,5 +64,11 @@ public class EmployeesController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void delete(@PathVariable UUID id) {
         this.employeesService.delete(id);
+    }
+
+    //POST IMG
+    @PostMapping("/avatar/{id}")
+    public void imgUpload(@RequestParam("avatar") MultipartFile img, @PathVariable UUID id) throws IOException {
+        this.employeesService.imgUpload(img, id);
     }
 }

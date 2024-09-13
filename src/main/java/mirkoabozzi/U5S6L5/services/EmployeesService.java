@@ -1,5 +1,7 @@
 package mirkoabozzi.U5S6L5.services;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
 import mirkoabozzi.U5S6L5.dto.EmployeesDTO;
 import mirkoabozzi.U5S6L5.entities.Employee;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
@@ -11,13 +13,17 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.UUID;
 
 @Service
 public class EmployeesService {
     @Autowired
     private EmployeesRepository employeesRepository;
+    @Autowired
+    private Cloudinary cloudinary;
 
     //POST
     public Employee save(EmployeesDTO payload) {
@@ -52,5 +58,13 @@ public class EmployeesService {
     //DELETE
     public void delete(UUID id) {
         this.employeesRepository.delete(this.findById(id));
+    }
+
+    //IMG UPLOAD
+    public void imgUpload(MultipartFile file, UUID id) throws IOException {
+        Employee employee = this.findById(id);
+        String url = (String) cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap()).get("url");
+        employee.setAvatar(url);
+        this.employeesRepository.save(employee);
     }
 }
