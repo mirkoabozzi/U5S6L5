@@ -1,6 +1,7 @@
 package mirkoabozzi.U5S6L5.services;
 
 import mirkoabozzi.U5S6L5.dto.ReservationsDTO;
+import mirkoabozzi.U5S6L5.dto.ReservationsUpdateDTO;
 import mirkoabozzi.U5S6L5.entities.Employee;
 import mirkoabozzi.U5S6L5.entities.Reservation;
 import mirkoabozzi.U5S6L5.entities.Trip;
@@ -42,6 +43,14 @@ public class ReservationsService {
     //GET BY ID
     public Reservation findById(UUID id) {
         return reservationsRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    //PUT
+    public Reservation update(UUID id, ReservationsUpdateDTO payload) {
+        Reservation found = this.findById(id);
+        found.setDate(payload.date());
+        found.setNote(payload.note());
+        return this.reservationsRepository.save(found);
     }
 
     //DELETE

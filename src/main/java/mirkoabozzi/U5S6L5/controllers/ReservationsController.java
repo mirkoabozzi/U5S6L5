@@ -1,6 +1,7 @@
 package mirkoabozzi.U5S6L5.controllers;
 
 import mirkoabozzi.U5S6L5.dto.ReservationsDTO;
+import mirkoabozzi.U5S6L5.dto.ReservationsUpdateDTO;
 import mirkoabozzi.U5S6L5.entities.Reservation;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.services.ReservationsService;
@@ -43,6 +44,17 @@ public class ReservationsController {
     @GetMapping("/{id}")
     public Reservation findById(@PathVariable UUID id) {
         return reservationsService.findById(id);
+    }
+
+    //PUT
+    @PutMapping("/{id}")
+    private Reservation update(@PathVariable UUID id, @RequestBody @Validated ReservationsUpdateDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload Error: " + msg);
+        } else {
+            return this.reservationsService.update(id, payload);
+        }
     }
 
     //DELETE
