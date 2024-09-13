@@ -1,6 +1,7 @@
 package mirkoabozzi.U5S6L5.exceptions;
 
 import mirkoabozzi.U5S6L5.dto.ErrorsDTO;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -35,5 +36,11 @@ public class ExceptionsHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorsDTO handleMaximumSizeException(MaxUploadSizeExceededException ex) {
         return new ErrorsDTO(ex.getMessage(), LocalDateTime.now());
+    }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorsDTO handleDataIntegrityViolationException(DataIntegrityViolationException ex) {
+        return new ErrorsDTO("You can't delete an element that is linked to another element! ", LocalDateTime.now());
     }
 }
