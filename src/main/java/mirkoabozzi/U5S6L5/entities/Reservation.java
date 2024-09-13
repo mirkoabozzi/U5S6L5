@@ -19,7 +19,8 @@ public class Reservation {
     @GeneratedValue
     @Setter(AccessLevel.NONE)
     private UUID id;
-    private LocalDate date;
+    @Column(name = "request_date")
+    private LocalDate requestDate;
     private String note;
     @ManyToOne
     @JoinColumn(name = "employee_id")
@@ -28,8 +29,8 @@ public class Reservation {
     @JoinColumn(name = "trip_id")
     private Trip trip;
 
-    public Reservation(LocalDate date, String note, Employee employee, Trip trip) {
-        this.date = date;
+    public Reservation(String note, Employee employee, Trip trip) {
+        this.requestDate = LocalDate.now();
         this.note = note;
         this.employee = employee;
         this.trip = trip;

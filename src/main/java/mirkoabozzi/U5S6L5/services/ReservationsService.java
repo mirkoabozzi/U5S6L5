@@ -30,9 +30,9 @@ public class ReservationsService {
     public Reservation save(ReservationsDTO payload) {
         Employee employeeFound = this.employeesService.findById(payload.employeeId());
         Trip tripFound = this.tripsService.findById(payload.tripId());
-        if (reservationsRepository.existsByEmployeeAndDate(employeeFound, payload.date()))
-            throw new BadRequestException("Reservation already on DB ");
-        Reservation reservation = new Reservation(payload.date(), payload.note(), employeeFound, tripFound);
+        if (reservationsRepository.existsByEmployeeAndTripDate(employeeFound, tripFound.getDate()))
+            throw new BadRequestException("You already have a reservation for this day: " + tripFound.getDate());
+        Reservation reservation = new Reservation(payload.note(), employeeFound, tripFound);
         return this.reservationsRepository.save(reservation);
     }
 
@@ -51,7 +51,6 @@ public class ReservationsService {
     //PUT
     public Reservation update(UUID id, ReservationsUpdateDTO payload) {
         Reservation found = this.findById(id);
-        found.setDate(payload.date());
         found.setNote(payload.note());
         return this.reservationsRepository.save(found);
     }
