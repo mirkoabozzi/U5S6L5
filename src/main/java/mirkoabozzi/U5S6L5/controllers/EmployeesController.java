@@ -5,11 +5,13 @@ import mirkoabozzi.U5S6L5.entities.Employee;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.services.EmployeesService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -28,6 +30,20 @@ public class EmployeesController {
         } else {
             return employeesService.save(payload);
         }
+    }
+
+    //GET
+    @GetMapping
+    private Page<Employee> getEmployees(@RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size,
+                                        @RequestParam(defaultValue = "surname") String sortBy) {
+        return this.employeesService.findAll(page, size, sortBy);
+    }
+
+    //GET BY ID
+    @GetMapping("/{id}")
+    public Employee findById(@PathVariable UUID id) {
+        return employeesService.findById(id);
     }
 
 }
