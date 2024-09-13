@@ -5,6 +5,7 @@ import mirkoabozzi.U5S6L5.dto.ReservationsUpdateDTO;
 import mirkoabozzi.U5S6L5.entities.Employee;
 import mirkoabozzi.U5S6L5.entities.Reservation;
 import mirkoabozzi.U5S6L5.entities.Trip;
+import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.exceptions.NotFoundException;
 import mirkoabozzi.U5S6L5.repositories.ReservationsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,8 @@ public class ReservationsService {
     public Reservation save(ReservationsDTO payload) {
         Employee employeeFound = this.employeesService.findById(payload.employeeId());
         Trip tripFound = this.tripsService.findById(payload.tripId());
-//        if (reservationsRepository.existsByEmployeeAndDate(payload.employeeId(), payload.date()))
-//            throw new BadRequestException("Reservation already on db ");
+        if (reservationsRepository.existsByEmployeeAndDate(employeeFound, payload.date()))
+            throw new BadRequestException("Reservation already on DB ");
         Reservation reservation = new Reservation(payload.date(), payload.note(), employeeFound, tripFound);
         return this.reservationsRepository.save(reservation);
     }
