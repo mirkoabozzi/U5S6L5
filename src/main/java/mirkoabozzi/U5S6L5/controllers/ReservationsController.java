@@ -5,13 +5,12 @@ import mirkoabozzi.U5S6L5.entities.Reservation;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.services.ReservationsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -32,4 +31,19 @@ public class ReservationsController {
     }
 
     //GET
+    @GetMapping
+    private Page<Reservation> getReservations(@RequestParam(defaultValue = "0") int page,
+                                              @RequestParam(defaultValue = "10") int size,
+                                              @RequestParam(defaultValue = "date") String sortBy) {
+        return this.reservationsService.findAll(page, size, sortBy);
+    }
+
+    //GET BY ID
+    @GetMapping("/{id}")
+    public Reservation findById(@PathVariable UUID id) {
+        return reservationsService.findById(id);
+    }
+
+    //DELETE
+
 }
