@@ -45,4 +45,7 @@ public class ReservationsService {
     }
 
     //DELETE
+    public void delete(UUID id) {
+        this.reservationsRepository.delete(this.findById(id));
+    }
 }

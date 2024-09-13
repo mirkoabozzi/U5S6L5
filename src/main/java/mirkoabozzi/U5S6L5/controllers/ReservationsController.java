@@ -6,6 +6,7 @@ import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
 import mirkoabozzi.U5S6L5.services.ReservationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -45,5 +46,9 @@ public class ReservationsController {
     }
 
     //DELETE
-
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        this.reservationsService.delete(id);
+    }
 }
