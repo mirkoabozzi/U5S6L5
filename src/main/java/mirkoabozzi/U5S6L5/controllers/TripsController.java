@@ -11,6 +11,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @RestController
@@ -38,5 +39,29 @@ public class TripsController {
                                 @RequestParam(defaultValue = "10") int size,
                                 @RequestParam(defaultValue = "destination") String sortBy) {
         return this.tripsService.findAll(page, size, sortBy);
+    }
+
+    //GET BY ID
+    @GetMapping("/{id}")
+    public Trip findById(@PathVariable UUID id) {
+        return tripsService.findById(id);
+    }
+
+    //PUT
+    @PutMapping("/{id}")
+    private Trip update(@PathVariable UUID id, @RequestBody @Validated TripsDTO payload, BindingResult validation) {
+        if (validation.hasErrors()) {
+            String msg = validation.getAllErrors().stream().map(error -> error.getDefaultMessage()).collect(Collectors.joining());
+            throw new BadRequestException("Payload error: " + msg);
+        } else {
+            return tripsService.update(id, payload);
+        }
+    }
+
+    //DELETE
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable UUID id) {
+        this.tripsService.delete(id);
     }
 }

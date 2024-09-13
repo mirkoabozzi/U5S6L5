@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Reservation {
     @Id
     @GeneratedValue
-    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private UUID id;
     private LocalDate date;
     private String note;

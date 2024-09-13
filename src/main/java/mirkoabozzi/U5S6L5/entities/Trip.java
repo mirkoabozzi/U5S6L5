@@ -18,7 +18,7 @@ import java.util.UUID;
 public class Trip {
     @Id
     @GeneratedValue
-    @Getter(AccessLevel.NONE)
+    @Setter(AccessLevel.NONE)
     private UUID id;
     private String destination;
     private LocalDate date;

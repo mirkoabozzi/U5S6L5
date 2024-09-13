@@ -3,6 +3,7 @@ package mirkoabozzi.U5S6L5.services;
 import mirkoabozzi.U5S6L5.dto.TripsDTO;
 import mirkoabozzi.U5S6L5.entities.Trip;
 import mirkoabozzi.U5S6L5.exceptions.BadRequestException;
+import mirkoabozzi.U5S6L5.exceptions.NotFoundException;
 import mirkoabozzi.U5S6L5.repositories.TripsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -10,6 +11,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.UUID;
 
 @Service
 public class TripsService {
@@ -29,5 +32,24 @@ public class TripsService {
         if (page > 50) page = 50;
         Pageable pageable = PageRequest.of(page, size, Sort.by(sortBy));
         return this.tripsRepository.findAll(pageable);
+    }
+
+    //GET BY ID
+    public Trip findById(UUID id) {
+        return tripsRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+    }
+
+    //PUT
+    public Trip update(UUID id, TripsDTO payload) {
+        Trip found = this.findById(id);
+        found.setDestination(payload.destination());
+        found.setDate(payload.date());
+        found.setState(payload.state());
+        return this.tripsRepository.save(found);
+    }
+
+    //DELETE
+    public void delete(UUID id) {
+        this.tripsRepository.delete(this.findById(id));
     }
 }
