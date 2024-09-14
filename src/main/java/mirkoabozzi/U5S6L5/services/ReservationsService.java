@@ -13,6 +13,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -25,6 +27,8 @@ public class ReservationsService {
     private EmployeesService employeesService;
     @Autowired
     private TripsService tripsService;
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
     //POST
     public Reservation save(ReservationsDTO payload) {
@@ -33,6 +37,13 @@ public class ReservationsService {
         if (reservationsRepository.existsByEmployeeAndTripDate(employeeFound, tripFound.getDate()))
             throw new BadRequestException("You already have a reservation for this day: " + tripFound.getDate());
         Reservation reservation = new Reservation(payload.note(), employeeFound, tripFound);
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom(javaMailSender.getUsername());
+        msg.setTo(employeeFound.getEmail());
+        msg.setText("Hi " + employeeFound.getName() + " " + employeeFound.getSurname() + " your reservation for " + tripFound.getDestination() + " on " + tripFound.getDate() + " is confirmed!");
+        javaMailSender.send(msg);
+
         return this.reservationsRepository.save(reservation);
     }
 

@@ -12,6 +12,8 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,12 +27,21 @@ public class EmployeesService {
     private EmployeesRepository employeesRepository;
     @Autowired
     private Cloudinary cloudinary;
+    @Autowired
+    private JavaMailSenderImpl javaMailSender;
 
     //POST
     public Employee save(EmployeesDTO payload) {
         if (employeesRepository.existsByEmail(payload.email()))
             throw new BadRequestException("Email " + payload.email() + " already on DB");
         Employee newEmployee = new Employee(payload.username(), payload.name(), payload.surname(), payload.email(), "https://ui-avatars.com/api/?name=" + payload.name() + "+" + payload.surname());
+
+        SimpleMailMessage msg = new SimpleMailMessage();
+        msg.setFrom(javaMailSender.getUsername());
+        msg.setTo(payload.email());
+        msg.setText("Hi " + payload.name() + " " + payload.surname() + " this mail was sent from JAVA, thanks for joining us!");
+        javaMailSender.send(msg);
+
         return this.employeesRepository.save(newEmployee);
     }
 
