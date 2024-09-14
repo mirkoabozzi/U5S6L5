@@ -41,6 +41,7 @@ public class ReservationsService {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setFrom(javaMailSender.getUsername());
         msg.setTo(employeeFound.getEmail());
+        msg.setSubject("Enjoy your trip!");
         msg.setText("Hi " + employeeFound.getName() + " " + employeeFound.getSurname() + " your reservation for " + tripFound.getDestination() + " on " + tripFound.getDate() + " is confirmed!");
         javaMailSender.send(msg);
 

@@ -39,6 +39,7 @@ public class EmployeesService {
         SimpleMailMessage msg = new SimpleMailMessage();
         msg.setFrom(javaMailSender.getUsername());
         msg.setTo(payload.email());
+        msg.setSubject("Welcome to JAVA");
         msg.setText("Hi " + payload.name() + " " + payload.surname() + " this mail was sent from JAVA, thanks for joining us!");
         javaMailSender.send(msg);
 
